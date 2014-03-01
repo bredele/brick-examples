@@ -15,7 +15,11 @@
 
 ### Hello World
 
+[link](https://github.com/bredele/lego-examples/blob/master/src/hello/index.js)
 
+### Computed properties
+
+[link](https://github.com/bredele/lego-examples/blob/master/src/computed/index.js)
 
 ## License
 
