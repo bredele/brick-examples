@@ -1483,103 +1483,33 @@ event.off = function(el, str, fn, capture) {\n\
 };\n\
 //@ sourceURL=bredele-event/index.js"
 ));
-require.register("bredele-events-brick/index.js", Function("exports, require, module",
-"/**\n\
- * Dependencies\n\
- */\n\
-\n\
-var ev = require('event');\n\
+require.register("bredele-input-brick/index.js", Function("exports, require, module",
+"var ev = require('event');\n\
 \n\
 /**\n\
- * Map touch events.\n\
- * @type {Object}\n\
- * @api private\n\
+ * Expose 'input-brick'\n\
  */\n\
 \n\
-var mapper = {\n\
-\t'click' : 'touchend',\n\
-\t'mousedown' : 'touchstart',\n\
-\t'mouseup' : 'touchend',\n\
-\t'mousemove' : 'touchmove'\n\
+module.exports = model;\n\
+\n\
+function model(node, expr) {\n\
+\tvar view = this;\n\
+\tev(node, 'input', function(node) {\n\
+\t\tview.set(expr, node.value);\n\
+\t});\n\
 };\n\
 \n\
 \n\
-/**\n\
- * Expose 'Event plugin'\n\
- */\n\
+//WE should destroy the listener\n\
+// model.destroy = function() {\n\
 \n\
-module.exports = Events;\n\
-\n\
-\n\
-/**\n\
- * Event plugin constructor\n\
- * @param {Object} view event plugin scope\n\
- * @param {Boolean} isTouch optional\n\
- * @api public\n\
- */\n\
-\n\
-function Events(view, isTouch){\n\
-  if(!(this instanceof Events)) return new Events(view, isTouch);\n\
-  this.view = view;\n\
-  this.listeners = [];\n\
-  this.isTouch = isTouch || (window.ontouchstart !== undefined);\n\
-}\n\
-\n\
-\n\
-\n\
-/**\n\
- * Listen events.\n\
- * @param {HTMLElement} node \n\
- * @param {String} type event's type\n\
- * @param {String} fn view's callback name\n\
- * @param {String} capture useCapture\n\
- * @api private\n\
- */\n\
-\n\
-Events.prototype.on = function(node, type, fn, capture) {\n\
-  var _this = this,\n\
-     cb = function(target, e) {\n\
-      _this.view[fn].call(_this.view, target, e, node); //we should pass target\n\
-     };\n\
-  //todo: event should return the node as well...it's too complicated\n\
-  this.listeners\n\
-    .push([node].concat(ev(node, type, (typeof fn === 'function') ? fn : cb, (capture === 'true'))));\n\
-};\n\
-\n\
-\n\
-\n\
-/**\n\
- * Map events (desktop and mobile)\n\
- * @param  {String} type event's name\n\
- * @return {String} mapped event\n\
- */\n\
-\n\
-Events.prototype.map = function(type) {\n\
-\treturn this.isTouch ? (mapper[type] || type) : type;\n\
-};\n\
-\n\
-\n\
-/**\n\
- * Remove all listeners.\n\
- * @api public\n\
- */\n\
-\n\
-Events.prototype.destroy = function() {\n\
-  for(var l = this.listeners.length; l--;) {\n\
-    var listener = this.listeners[l];\n\
-    ev.off(listener[0], listener[1], listener[2], listener[3]);\n\
-  }\n\
-  this.listeners = [];\n\
-};\n\
-\n\
-//@ sourceURL=bredele-events-brick/index.js"
+// };//@ sourceURL=bredele-input-brick/index.js"
 ));
 require.register("hello/index.js", Function("exports, require, module",
 "//dependencies\n\
 \n\
 var lego = require('lego');\n\
 var html = require('./hello.html');\n\
-var events = require('events-brick');\n\
 \n\
 \n\
 //create view\n\
@@ -1591,12 +1521,7 @@ var view = lego(html, {\n\
 \n\
 \n\
 //add event brick\n\
-view.add('ev', events({\n\
-\tname: function(target) {\n\
-\t\tconsole.log(target.value);\n\
-\t\tview.set('label', target.value);\n\
-\t}\n\
-}));\n\
+view.add('model', require('input-brick'));\n\
 \n\
 //insert view into body\n\
 \n\
@@ -1607,7 +1532,6 @@ require.register("computed/index.js", Function("exports, require, module",
 \n\
 var lego = require('lego');\n\
 var html = require('./computed.html');\n\
-var events = require('events-brick');\n\
 \n\
 \n\
 //create view\n\
@@ -1626,14 +1550,7 @@ view.compute('name', function() {\n\
 \n\
 //add events brick\n\
 \n\
-view.add('ev', events({\n\
-\tfirstName: function(node) {\n\
-\t\tview.set('firstName', node.value);\n\
-\t},\n\
-\tlastName: function(node) {\n\
-\t\tview.set('lastName', node.value);\n\
-\t}\n\
-}));\n\
+view.add('model', require('input-brick'));\n\
 \n\
 //insert view into body\n\
 \n\
@@ -1667,7 +1584,7 @@ require.register("hello/hello.html", Function("exports, require, module",
 \t  \theight:80px;\\n\
 \t  }\\n\
 \t</style>\\n\
-\t<input type=\"text\" ev=\"on:input,name\" value=\"Hello World\">\\n\
+\t<input type=\"text\" model=\"label\" value=\"Hello World\">\\n\
 \t<div class=\"brick\">{{ label }}</div>\\n\
 </div>\\n\
 ';//@ sourceURL=hello/hello.html"
@@ -1677,7 +1594,7 @@ require.register("computed/computed.html", Function("exports, require, module",
 \t<p>\\n\
 \t\tThis is an example by <a href=\"http://github.com/{{github}}/{{repo}}\">{{github}}</a>\\n\
 \t</p>\\n\
-\tPlease enter your <input type=\"text\" value=\"first name\" ev=\"on:input,firstName\"> and your <input type=\"text\" value=\"last name\" ev=\"on:input,lastName\">\\n\
+\tPlease enter your <input type=\"text\" value=\"first name\" model=\"firstName\"> and your <input type=\"text\" value=\"last name\" model=\"lastName\">\\n\
 \tWelcome <span>{{name}}</span>\\n\
 </div>';//@ sourceURL=computed/computed.html"
 ));
@@ -1748,14 +1665,14 @@ require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
 require.alias("bredele-each/index.js", "bredele-each/index.js");
 require.alias("bredele-brick/index.js", "bredele-brick/index.js");
 require.alias("bredele-lego/index.js", "bredele-lego/index.js");
-require.alias("bredele-events-brick/index.js", "hello/deps/events-brick/index.js");
-require.alias("bredele-events-brick/index.js", "hello/deps/events-brick/index.js");
-require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
-require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
+require.alias("bredele-input-brick/index.js", "hello/deps/input-brick/index.js");
+require.alias("bredele-input-brick/index.js", "hello/deps/input-brick/index.js");
+require.alias("bredele-event/index.js", "bredele-input-brick/deps/event/index.js");
+require.alias("bredele-event/index.js", "bredele-input-brick/deps/event/index.js");
 require.alias("component-indexof/index.js", "bredele-event/deps/indexof/index.js");
 
 require.alias("bredele-event/index.js", "bredele-event/index.js");
-require.alias("bredele-events-brick/index.js", "bredele-events-brick/index.js");
+require.alias("bredele-input-brick/index.js", "bredele-input-brick/index.js");
 require.alias("hello/index.js", "hello/index.js");
 require.alias("computed/index.js", "home/deps/computed/index.js");
 require.alias("computed/index.js", "home/deps/computed/index.js");
@@ -1821,13 +1738,13 @@ require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
 require.alias("bredele-each/index.js", "bredele-each/index.js");
 require.alias("bredele-brick/index.js", "bredele-brick/index.js");
 require.alias("bredele-lego/index.js", "bredele-lego/index.js");
-require.alias("bredele-events-brick/index.js", "computed/deps/events-brick/index.js");
-require.alias("bredele-events-brick/index.js", "computed/deps/events-brick/index.js");
-require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
-require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
+require.alias("bredele-input-brick/index.js", "computed/deps/input-brick/index.js");
+require.alias("bredele-input-brick/index.js", "computed/deps/input-brick/index.js");
+require.alias("bredele-event/index.js", "bredele-input-brick/deps/event/index.js");
+require.alias("bredele-event/index.js", "bredele-input-brick/deps/event/index.js");
 require.alias("component-indexof/index.js", "bredele-event/deps/indexof/index.js");
 
 require.alias("bredele-event/index.js", "bredele-event/index.js");
-require.alias("bredele-events-brick/index.js", "bredele-events-brick/index.js");
+require.alias("bredele-input-brick/index.js", "bredele-input-brick/index.js");
 require.alias("computed/index.js", "computed/index.js");
 require.alias("home/index.js", "home/index.js");

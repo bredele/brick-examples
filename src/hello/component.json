@@ -3,7 +3,7 @@
   "description": "hello world",
   "dependencies": {
     "bredele/lego" : "*",
-    "bredele/events-brick" : "*"
+    "bredele/input-brick" : "*"
   },
   "development": {},
   "main": "index.js",

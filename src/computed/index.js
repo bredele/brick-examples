@@ -2,7 +2,6 @@
 
 var lego = require('lego');
 var html = require('./computed.html');
-var events = require('events-brick');
 
 
 //create view
@@ -21,14 +20,7 @@ view.compute('name', function() {
 
 //add events brick
 
-view.add('ev', events({
-	firstName: function(node) {
-		view.set('firstName', node.value);
-	},
-	lastName: function(node) {
-		view.set('lastName', node.value);
-	}
-}));
+view.add('model', require('input-brick'));
 
 //insert view into body
 
