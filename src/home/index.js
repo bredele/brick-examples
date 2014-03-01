@@ -1,1 +1,2 @@
 require('hello');
+require('computed');

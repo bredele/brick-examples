@@ -1,0 +1,14 @@
+{
+  "name": "computed",
+  "description": "computed",
+  "dependencies": {
+    "bredele/lego" : "*",
+    "bredele/events-brick" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["computed.html"],
+  "scripts": [
+    "index.js"
+  ]
+}

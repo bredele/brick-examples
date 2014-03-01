@@ -1602,9 +1602,48 @@ view.add('ev', events({\n\
 \n\
 view.build(document.body);//@ sourceURL=hello/index.js"
 ));
-require.register("home/index.js", Function("exports, require, module",
-"require('hello');//@ sourceURL=home/index.js"
+require.register("computed/index.js", Function("exports, require, module",
+"//dependencies\n\
+\n\
+var lego = require('lego');\n\
+var html = require('./computed.html');\n\
+var events = require('events-brick');\n\
+\n\
+\n\
+//create view\n\
+\n\
+var view = lego(html, {\n\
+\trepo: 'lego',\n\
+\tgithub: 'bredele'\n\
+});\n\
+\n\
+\n\
+//create computed property\n\
+\n\
+view.compute('name', function() {\n\
+\treturn this.firstName + ' ' + this.lastName;\n\
+});\n\
+\n\
+//add events brick\n\
+\n\
+view.add('ev', events({\n\
+\tfirstName: function(node) {\n\
+\t\tview.set('firstName', node.value);\n\
+\t},\n\
+\tlastName: function(node) {\n\
+\t\tview.set('lastName', node.value);\n\
+\t}\n\
+}));\n\
+\n\
+//insert view into body\n\
+\n\
+view.build(document.body);//@ sourceURL=computed/index.js"
 ));
+require.register("home/index.js", Function("exports, require, module",
+"require('hello');\n\
+require('computed');//@ sourceURL=home/index.js"
+));
+
 
 
 
@@ -1624,7 +1663,7 @@ require.register("hello/hello.html", Function("exports, require, module",
 \t<style>\\n\
 \t  .brick {\\n\
 \t  \tbackground: {{ color }};\\n\
-\t  \twidth:80px;\\n\
+\t  \tmin-width:80px;\\n\
 \t  \theight:80px;\\n\
 \t  }\\n\
 \t</style>\\n\
@@ -1632,6 +1671,15 @@ require.register("hello/hello.html", Function("exports, require, module",
 \t<div class=\"brick\">{{ label }}</div>\\n\
 </div>\\n\
 ';//@ sourceURL=hello/hello.html"
+));
+require.register("computed/computed.html", Function("exports, require, module",
+"module.exports = '<div class=\"computed\">\\n\
+\t<p>\\n\
+\t\tThis is an example by <a href=\"http://github.com/{{github}}/{{repo}}\">{{github}}</a>\\n\
+\t</p>\\n\
+\tPlease enter your <input type=\"text\" value=\"first name\" ev=\"on:input,firstName\"> and your <input type=\"text\" value=\"last name\" ev=\"on:input,lastName\">\\n\
+\tWelcome <span>{{name}}</span>\\n\
+</div>';//@ sourceURL=computed/computed.html"
 ));
 require.alias("home/index.js", "lego-examples/deps/Home/index.js");
 require.alias("home/index.js", "lego-examples/deps/Home/index.js");
@@ -1709,4 +1757,77 @@ require.alias("component-indexof/index.js", "bredele-event/deps/indexof/index.js
 require.alias("bredele-event/index.js", "bredele-event/index.js");
 require.alias("bredele-events-brick/index.js", "bredele-events-brick/index.js");
 require.alias("hello/index.js", "hello/index.js");
+require.alias("computed/index.js", "home/deps/computed/index.js");
+require.alias("computed/index.js", "home/deps/computed/index.js");
+require.alias("bredele-lego/index.js", "computed/deps/lego/index.js");
+require.alias("bredele-lego/index.js", "computed/deps/lego/index.js");
+require.alias("bredele-artery/index.js", "bredele-lego/deps/artery/index.js");
+require.alias("bredele-artery/lib/app.js", "bredele-lego/deps/artery/lib/app.js");
+require.alias("bredele-artery/index.js", "bredele-lego/deps/artery/index.js");
+require.alias("bredele-store/index.js", "bredele-artery/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-artery/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-emitter/index.js", "bredele-artery/deps/emitter/index.js");
+
+require.alias("bredele-artery/index.js", "bredele-artery/index.js");
+require.alias("bredele-brick/index.js", "bredele-lego/deps/brick/index.js");
+require.alias("bredele-brick/index.js", "bredele-lego/deps/brick/index.js");
+require.alias("bredele-binding/index.js", "bredele-brick/deps/binding/index.js");
+require.alias("bredele-binding/index.js", "bredele-brick/deps/binding/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("component-indexof/index.js", "bredele-supplant/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-supplant/deps/trim/index.js");
+
+require.alias("bredele-supplant/index.js", "bredele-supplant/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-indexof/index.js", "bredele-binding/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-binding/deps/trim/index.js");
+
+require.alias("bredele-binding/index.js", "bredele-binding/index.js");
+require.alias("bredele-store/index.js", "bredele-brick/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-brick/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-brick/index.js", "bredele-brick/index.js");
+require.alias("bredele-lego/index.js", "bredele-lego/index.js");
+require.alias("bredele-events-brick/index.js", "computed/deps/events-brick/index.js");
+require.alias("bredele-events-brick/index.js", "computed/deps/events-brick/index.js");
+require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
+require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
+require.alias("component-indexof/index.js", "bredele-event/deps/indexof/index.js");
+
+require.alias("bredele-event/index.js", "bredele-event/index.js");
+require.alias("bredele-events-brick/index.js", "bredele-events-brick/index.js");
+require.alias("computed/index.js", "computed/index.js");
 require.alias("home/index.js", "home/index.js");
