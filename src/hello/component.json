@@ -1,0 +1,14 @@
+{
+  "name": "hello",
+  "description": "hello world",
+  "dependencies": {
+    "bredele/lego" : "*",
+    "bredele/events-brick" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["hello.html"],
+  "scripts": [
+    "index.js"
+  ]
+}

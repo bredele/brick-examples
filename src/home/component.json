@@ -1,0 +1,14 @@
+{
+  "name": "Home",
+  "description": "home package",
+  "dependencies": {
+  },
+  "development": {},
+  "local": [
+    "hello"
+  ],
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ]
+}
