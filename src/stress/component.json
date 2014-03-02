@@ -1,0 +1,14 @@
+{
+  "name": "stress",
+  "description": "stress test",
+  "dependencies": {
+    "bredele/lego" : "*",
+    "bredele/input-brick" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["stress.html"],
+  "scripts": [
+    "index.js"
+  ]
+}

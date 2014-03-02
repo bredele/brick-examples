@@ -12,6 +12,7 @@
   "development": {},
   "local": [
     "hello",
+    "stress",
     "computed",
     "expressions",
     "todo"

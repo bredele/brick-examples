@@ -15,15 +15,15 @@ var search = new Search();
 //NOTE: next release support query selection
 
 var sidebar = lego(document.querySelector('.sidebar'), examples);
-
+var container = lego(document.querySelector('.main')).build();
 //create stack
 //NOTE: use stack brick
 
-var stack = new Stack(document.querySelector('.main'));
-for(var l = examples.length; l--;) {
-	var name = examples[l].name;
+var stack = new Stack(document.querySelector('.stack'));
+for(var name in examples) {
 	stack.add(name, require(name));
 }
+
 
 //create carret
 var caret = lego('<div class="indicator"><span></span></div>');
@@ -33,13 +33,14 @@ var caret = lego('<div class="indicator"><span></span></div>');
 sidebar.add('examples', require('repeat-brick')(sidebar));
 sidebar.add('control', require('control-brick')({
 	active: function(target) {
-		stack.show(target.getAttribute('href').substring(1));
+		var ref = target.getAttribute('href').substring(1);
+		stack.show(ref);
+		container.reset(examples[ref]);
 		caret.build(target);
 	}
 }));
 sidebar.add('search', require('events-brick')({
 	search: function(target) {
-		console.log(target.value);
 		search.run(target.value);
 	}
 }));
@@ -50,6 +51,7 @@ sidebar.build();
 //show hello world
 var first = sidebar.el.querySelectorAll('.example-item')[0];
 caret.build(first);
-stack.show(first.getAttribute('href').substring(1));
+stack.show('hello');
+container.reset(examples['hello']);
 
 // <div class="indicator"><span></span></div>
