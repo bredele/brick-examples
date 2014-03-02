@@ -2227,6 +2227,7 @@ require.register("hello/index.js", Function("exports, require, module",
 var lego = require('lego');\n\
 var html = require('./hello.html');\n\
 \n\
+var app = lego.box();\n\
 \n\
 //create view\n\
 \n\
@@ -2246,7 +2247,8 @@ view.build();\n\
 \n\
 //export\n\
 \n\
-module.exports = view.el;\n\
+module.exports = app;\n\
+module.exports.el = view.el;\n\
 \n\
 \n\
 //@ sourceURL=hello/index.js"
@@ -2257,6 +2259,7 @@ require.register("stress/index.js", Function("exports, require, module",
 var lego = require('lego');\n\
 var html = require('./stress.html');\n\
 \n\
+var app = lego.box();\n\
 \n\
 //create view\n\
 \n\
@@ -2279,7 +2282,8 @@ view.build();\n\
 \n\
 //export\n\
 \n\
-module.exports = view.el;\n\
+module.exports = app;\n\
+module.exports.el = view.el;\n\
 \n\
 \n\
 //@ sourceURL=stress/index.js"
@@ -2290,6 +2294,7 @@ require.register("computed/index.js", Function("exports, require, module",
 var lego = require('lego');\n\
 var html = require('./computed.html');\n\
 \n\
+var app = lego.box();\n\
 \n\
 //create view\n\
 \n\
@@ -2317,7 +2322,8 @@ view.build();\n\
 \n\
 //export\n\
 \n\
-module.exports = view.el;//@ sourceURL=computed/index.js"
+module.exports = app;\n\
+module.exports.el = view.el;//@ sourceURL=computed/index.js"
 ));
 require.register("expressions/index.js", Function("exports, require, module",
 "//dependencies\n\
@@ -2325,6 +2331,7 @@ require.register("expressions/index.js", Function("exports, require, module",
 var lego = require('lego');\n\
 var html = require('./expressions.html');\n\
 \n\
+var app = lego.box();\n\
 \n\
 //create view\n\
 \n\
@@ -2344,7 +2351,8 @@ setInterval(function(){\n\
 \n\
 //export\n\
 \n\
-module.exports = view.el;//@ sourceURL=expressions/index.js"
+module.exports = app;\n\
+module.exports.el = view.el;//@ sourceURL=expressions/index.js"
 ));
 require.register("bredele-hidden-brick/index.js", Function("exports, require, module",
 "var classes = require('classes');\n\
@@ -2382,9 +2390,11 @@ var lego = require('lego'),\n\
     list = require('repeat-brick'),\n\
     Store = require('store');\n\
 \n\
+var app = lego.box();\n\
+\n\
 //init\n\
 \n\
-var app = lego(html, {\n\
+var view = lego(html, {\n\
 \titems: 0,\n\
 \tpending: 0\n\
 });\n\
@@ -2393,7 +2403,7 @@ var app = lego(html, {\n\
 var todos = list(new Store([]));\n\
 \n\
 \n\
-app.compute('completed', function() {\n\
+view.compute('completed', function() {\n\
 \treturn this.items - this.pending;\n\
 });\n\
 \n\
@@ -2408,8 +2418,8 @@ function stats(cb) {\n\
 \t\ttodos.loop(function(todo) {\n\
 \t\t\tif(todo.get('status') === 'pending') count++;\n\
 \t\t});\n\
-\t\tapp.set('items', todos.store.data.length); //have size\n\
-\t\tapp.set('pending', count);\n\
+\t\tview.set('items', todos.store.data.length); //have size\n\
+\t\tview.set('pending', count);\n\
 \t};\n\
 }\n\
 \n\
@@ -2453,25 +2463,28 @@ var controller = {\n\
 \n\
 //bindings\n\
 \n\
-app.add('todos', todos);\n\
-app.add('events', require('events-brick')(controller));\n\
-app.add('visible', require('hidden-brick'));\n\
-app.build();\n\
-\n\
-// var start = new Date();\n\
-// var arr = [];\n\
-// for(var l = 200; l--;) {\n\
-// \tarr.push({\n\
-// \t\tstatus : 'pending',\n\
-// \t\tlabel : 'foo'\n\
-// \t});\n\
-// }\n\
-// todos.store.reset(arr);\n\
-// console.log(new Date() - start);\n\
+view.add('todos', todos);\n\
+view.add('events', require('events-brick')(controller));\n\
+view.add('visible', require('hidden-brick'));\n\
+view.build();\n\
 \n\
 //export\n\
 \n\
-module.exports = app.el;//@ sourceURL=todo/index.js"
+app.on('console/todo', function() {\n\
+\tvar start = new Date();\n\
+\tvar arr = [];\n\
+\tfor(var l = 200; l--;) {\n\
+\t\tarr.push({\n\
+\t\t\tstatus : 'pending',\n\
+\t\t\tlabel : 'foo'\n\
+\t\t});\n\
+\t}\n\
+\ttodos.store.reset(arr);\n\
+\tconsole.log(new Date() - start);\n\
+});\n\
+\n\
+module.exports = app;\n\
+module.exports.el = view.el;//@ sourceURL=todo/index.js"
 ));
 require.register("console/index.js", Function("exports, require, module",
 "//dependencies\n\
@@ -2479,18 +2492,21 @@ require.register("console/index.js", Function("exports, require, module",
 var lego = require('lego');\n\
 var html = require('./console.html');\n\
 \n\
+//global to test\n\
+shell = lego.box();\n\
 \n\
 //create view\n\
 \n\
-var console = lego(html);\n\
+var view = lego(html);\n\
 \n\
 //insert view into body\n\
 \n\
-console.build();\n\
+view.build();\n\
 \n\
 //export\n\
 \n\
-module.exports = console.el;\n\
+module.exports = shell;\n\
+module.exports.el = view.el;\n\
 \n\
 \n\
 //@ sourceURL=console/index.js"
@@ -2504,6 +2520,8 @@ var examples = require('./examples'),\n\
 \t\tStack = require('domstack'),\n\
 \t\tevents= require('events-brick'),\n\
 \t\tSearch = require('search');\n\
+\n\
+var app = lego.box();\n\
 \n\
 //initialize search field\n\
 \n\
@@ -2519,15 +2537,19 @@ var container = lego(document.querySelector('.main')).build();\n\
 //create console stack\n\
 var tabs = new Stack(document.querySelector('.sidebar-stack'));\n\
 tabs.add('examples', sidebar.el.querySelector('.list-examples'), true);\n\
-tabs.add('console', require('console'));\n\
-\n\
+var console = require('console');\n\
+tabs.add('console', console.el);\n\
+app.use('console', console)\n\
 //create examples stack\n\
 //NOTE: use stack brick\n\
 \n\
 var stack = new Stack(document.querySelector('.stack'));\n\
 for(var name in examples) {\n\
-\tstack.add(name, require(name));\n\
+\tvar child = require(name);\n\
+\tstack.add(name, child.el);\n\
+\tapp.use(name, child);\n\
 }\n\
+\n\
 \n\
 \n\
 //create carret\n\
@@ -2718,10 +2740,15 @@ require.register("todo/todo.html", Function("exports, require, module",
 ));
 require.register("console/console.html", Function("exports, require, module",
 "module.exports = '<div class=\"console\">\\n\
-\t<div class=\"shell\">\\n\
-\t\t<input class=\"console-input\" type=\"text\">\\n\
-\t\t<pre class=\"log\"></pre>\\n\
-\t</div>\\n\
+\t<section class=\"editorWrap\">\\n\
+\t\t<div class=\"editor animate fadeIn\">\\n\
+\t\t\t<div class=\"menu\"></div><!-- end .menu -->\\n\
+\t\t\t<div class=\"code\">\\n\
+\t\t\t\t<textarea class=\"text\">Type something!</textarea>\\n\
+\t\t\t</div>\\n\
+\t\t</div>\\n\
+\t</section>\t\\n\
+\t<p>&nbsp;</p>\t\\n\
 </div>';//@ sourceURL=console/console.html"
 ));
 require.alias("home/index.js", "lego-examples/deps/Home/index.js");

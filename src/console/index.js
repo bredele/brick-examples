@@ -3,17 +3,20 @@
 var lego = require('lego');
 var html = require('./console.html');
 
+//global to test
+shell = lego.box();
 
 //create view
 
-var console = lego(html);
+var view = lego(html);
 
 //insert view into body
 
-console.build();
+view.build();
 
 //export
 
-module.exports = console.el;
+module.exports = shell;
+module.exports.el = view.el;
 
 

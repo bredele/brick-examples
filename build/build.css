@@ -517,37 +517,131 @@ hr {
         }
 }
 .console {
-	padding:10px;
-	min-height: 300px;
+	height: 100%;
+	width: 100%;
+	padding:20px;
+	text-align: center;
 }
-.shell {
-	min-height: 300px;
-	padding:10px;
-	color: #f1f1f1;
-	font-size: 12px;
-	line-height: 19px;
-	background-color: #222;
-	border: 1px solid #ddd;
+.console:before {
+	content: "";
+	display: inline-block;
+	height: 50%;
+	vertical-align: middle;
+	margin-right: -0.25em;
 }
-.log {
-	font-family: monospace;
-	white-space: pre-wrap;
-	word-wrap: break-word;
-	overflow-x: scroll;
+
+.editorWrap h1 {
+	color: #333333;
+	font-size: 20px;
+	font-weight: 800;
+	margin: 15px auto;
+}
+
+.editor {
+	width: 100%;
+}
+
+.editor .menu {
+	height: 25px;
+	background: #eee;
+	border-width:1px 1px 0 1px;
+	border-style: solid;
+	border-color: #959595;
+
+	
+	/* CSS3 properties */
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	
+	background-color: #ccc;
+	background-image: -webkit-linear-gradient(#d2d2d2 0%, #959595 100%);
+	background-image: -moz-linear-gradient(#d2d2d2 0%, #959595 100%);
+	background-image: -o-linear-gradient(#d2d2d2 0%, #959595 100%);
+	background-image: -ms-linear-gradient(#d2d2d2 0%, #959595 100%);
+	background-image: linear-gradient(#d2d2d2 0%, #959595 100%);
+	
+	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255, .5), inset 0 -1px 0 rgba(0,0,0, .2);
+	-moz-box-shadow: inset 0 1px 0 rgba(255,255,255, .5), inset 0 -1px 0 rgba(0,0,0, .2);
+	-ms-box-shadow: inset 0 1px 0 rgba(255,255,255, .5), inset 0 -1px 0 rgba(0,0,0, .2);
+	-o-box-shadow: inset 0 1px 0 rgba(255,255,255, .5), inset 0 -1px 0 rgba(0,0,0, .2);
+	box-shadow: inset 0 1px 0 rgba(255,255,255, .5), inset 0 -1px 0 rgba(0,0,0, .2);
+	
+}
+
+.editor .code {
 	counter-reset: line-numbering;
+	height: 260px;
+	padding: 5px 10px 10px 15px;
+	background: #222;
+	border: 1px solid rgba(0,0,0, .5);
+	
+	/* CSS3 properties */
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-bottomright: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	
+	-webkit-box-shadow:inset 15px 0 0 rgba(255,255,255, .05);
+	-moz-box-shadow:inset 15px 0 0 rgba(255,255,255, .05);
+	-ms-box-shadow:inset 15px 0 0 rgba(255,255,255, .05);
+	-o-box-shadow:inset 15px 0 0 rgba(255,255,255, .05);
+	box-shadow:inset 15px 0 0 rgba(255,255,255, .05);
 }
 
-.console-input {
-	height:28px;
-
-	font-size: 13px;
-	padding:8px 14px;
-	width:100%;
-	color:#f1f1f1;
-	border:0;
-	outline:0;
-	background:rgba(255,255,255,.5);
+.editor textarea.text{ 
+	width: 560px;
+	padding-left: 15px;
+	height: 100%;
+	background: transparent;
+	outline: none;
+	border: none;
+	font-family: "Courier new", "american typewriter";
+	font-weight: 400;
+	font-size: .8em;
+	line-height: 2;
+	letter-spacing: 1.2px;
+	color: #58bf1d;
+	
+	resize: none; /* stop textarea from being resized in webkit */
+	max-width: 580px; /* prevents resizing */
+	
+	/* CSS3 properties */
+	-webkit-text-shadow: 0px 0px 3px rgba(88,191,29,0.5);
+	-moz-text-shadow: 0px 0px 3px rgba(88,191,29,0.5);
+	-ms-text-shadow: 0px 0px 3px rgba(88,191,29,0.5);
+	-o-text-shadow: 0px 0px 3px rgba(88,191,29,0.5);
+	text-shadow: 0px 0px 3px rgba(88,191,29,0.5);
 }
+
+/* clear yo stuff son! */
+.editor:after {
+	content: "";
+	height: 0;
+	width: 100%;
+	display: block;
+	font-size: 0;
+	clear: both;
+}
+
+.console p {
+	font-size: 1.2em;
+	margin: 0 auto;
+	padding: 0;
+	line-height: 1.2;
+	font-style: italic;
+	font-weight: 400;
+}
+
+.console p a {
+	color: #333;
+}
+
 * {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;

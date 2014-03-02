@@ -7,6 +7,8 @@ var examples = require('./examples'),
 		events= require('events-brick'),
 		Search = require('search');
 
+var app = lego.box();
+
 //initialize search field
 
 var search = new Search();
@@ -21,15 +23,19 @@ var container = lego(document.querySelector('.main')).build();
 //create console stack
 var tabs = new Stack(document.querySelector('.sidebar-stack'));
 tabs.add('examples', sidebar.el.querySelector('.list-examples'), true);
-tabs.add('console', require('console'));
-
+var console = require('console');
+tabs.add('console', console.el);
+app.use('console', console)
 //create examples stack
 //NOTE: use stack brick
 
 var stack = new Stack(document.querySelector('.stack'));
 for(var name in examples) {
-	stack.add(name, require(name));
+	var child = require(name);
+	stack.add(name, child.el);
+	app.use(name, child);
 }
+
 
 
 //create carret

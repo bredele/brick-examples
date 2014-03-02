@@ -5,9 +5,11 @@ var lego = require('lego'),
     list = require('repeat-brick'),
     Store = require('store');
 
+var app = lego.box();
+
 //init
 
-var app = lego(html, {
+var view = lego(html, {
 	items: 0,
 	pending: 0
 });
@@ -16,7 +18,7 @@ var app = lego(html, {
 var todos = list(new Store([]));
 
 
-app.compute('completed', function() {
+view.compute('completed', function() {
 	return this.items - this.pending;
 });
 
@@ -31,8 +33,8 @@ function stats(cb) {
 		todos.loop(function(todo) {
 			if(todo.get('status') === 'pending') count++;
 		});
-		app.set('items', todos.store.data.length); //have size
-		app.set('pending', count);
+		view.set('items', todos.store.data.length); //have size
+		view.set('pending', count);
 	};
 }
 
@@ -76,22 +78,25 @@ var controller = {
 
 //bindings
 
-app.add('todos', todos);
-app.add('events', require('events-brick')(controller));
-app.add('visible', require('hidden-brick'));
-app.build();
-
-// var start = new Date();
-// var arr = [];
-// for(var l = 200; l--;) {
-// 	arr.push({
-// 		status : 'pending',
-// 		label : 'foo'
-// 	});
-// }
-// todos.store.reset(arr);
-// console.log(new Date() - start);
+view.add('todos', todos);
+view.add('events', require('events-brick')(controller));
+view.add('visible', require('hidden-brick'));
+view.build();
 
 //export
 
-module.exports = app.el;
+app.on('console/todo', function() {
+	var start = new Date();
+	var arr = [];
+	for(var l = 200; l--;) {
+		arr.push({
+			status : 'pending',
+			label : 'foo'
+		});
+	}
+	todos.store.reset(arr);
+	console.log(new Date() - start);
+});
+
+module.exports = app;
+module.exports.el = view.el;

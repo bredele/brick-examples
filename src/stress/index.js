@@ -3,6 +3,7 @@
 var lego = require('lego');
 var html = require('./stress.html');
 
+var app = lego.box();
 
 //create view
 
@@ -25,6 +26,7 @@ view.build();
 
 //export
 
-module.exports = view.el;
+module.exports = app;
+module.exports.el = view.el;
 
 
