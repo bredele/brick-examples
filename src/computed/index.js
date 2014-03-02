@@ -8,7 +8,9 @@ var html = require('./computed.html');
 
 var view = lego(html, {
 	repo: 'lego',
-	github: 'bredele'
+	github: 'bredele',
+	firstName: '',
+	lastName: ''
 });
 
 

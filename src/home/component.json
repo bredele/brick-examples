@@ -6,7 +6,8 @@
   "development": {},
   "local": [
     "hello",
-    "computed"
+    "computed",
+    "expressions"
   ],
   "main": "index.js",
   "scripts": [
