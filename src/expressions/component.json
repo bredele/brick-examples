@@ -1,0 +1,13 @@
+{
+  "name": "expressions",
+  "description": "expressions",
+  "dependencies": {
+    "bredele/lego" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["expressions.html"],
+  "scripts": [
+    "index.js"
+  ]
+}

@@ -2,6 +2,12 @@
   "name": "Home",
   "description": "home package",
   "dependencies": {
+    "bredele/lego" : "*",
+    "bredele/repeat-brick" : "*",
+    "bredele/domstack" : "*",
+    "bredele/control-brick" : "*",
+    "bredele/search" : "*",
+    "bredele/events-brick" : "*"
   },
   "development": {},
   "local": [
@@ -11,7 +17,9 @@
     "todo"
   ],
   "main": "index.js",
+  "styles" : ["home.css"],
   "scripts": [
-    "index.js"
+    "index.js",
+    "examples.js"
   ]
 }

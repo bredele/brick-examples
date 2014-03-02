@@ -18,4 +18,10 @@ view.add('model', require('input-brick'));
 
 //insert view into body
 
-view.build(document.body);
+view.build();
+
+//export
+
+module.exports = view.el;
+
+

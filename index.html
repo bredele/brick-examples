@@ -6,6 +6,31 @@
 	<link rel="stylesheet" href="build/build.css">
 </head>
 <body>
+	<div class="container">
+		<div class="toolbar">
+		</div>
+		<div class="sidebar">
+			<header class="sidebar-header">
+				<input class="search-field" placeholder="Search all examples" type="text" search="on:input,search">
+			</header>
+			<div>
+				<ul class="tabs">
+			  <li class="tabs-li active display-inline" >
+			    <h5><a data-ember-action="281">Examples</a></h5>
+			  </li>
+			  <li class="tabs-li">
+			    <h5><a data-ember-action="283">Console</a></h5>
+			  </li>
+			</ul>
+			</div>
+			<ul class="list-examples" control="radio:click .example-item,active" examples>
+				<a href="#{{name}}" class="searchable example-item" data-search="{{keywords}}">
+					<span class="example-title">{{label}}</span>
+				</a>
+			</ul>
+		</div>
+		<div class="main"></div>
+	</div>
 	<script src="build/build.js"></script>
 	<script>require('home');</script>
 </body>
