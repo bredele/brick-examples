@@ -21,6 +21,15 @@
 
 [link](https://github.com/bredele/lego-examples/blob/master/src/computed/index.js)
 
+### Expressions
+
+[link](https://github.com/bredele/lego-examples/blob/master/src/expressions/expressions.html)
+
+### Todo MVC
+
+[link](https://github.com/bredele/lego-examples/blob/master/src/todo/index.js)
+
+
 ## License
 
   The MIT License (MIT)

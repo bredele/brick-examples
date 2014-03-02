@@ -1583,11 +1583,627 @@ setInterval(function(){\n\
 //create random string\n\
 //@ sourceURL=expressions/index.js"
 ));
+require.register("bredele-repeat-brick/index.js", Function("exports, require, module",
+"var binding = require('binding'),\n\
+    Store = require('store'),\n\
+    each = require('each'),\n\
+    index = require('indexof');\n\
+\n\
+\n\
+\n\
+/**\n\
+ * Expose 'List'\n\
+ */\n\
+\n\
+module.exports = List;\n\
+\n\
+\n\
+/**\n\
+ * List constructor.\n\
+ * \n\
+ * @param {HTMLelement} el\n\
+ * @param {Object} model\n\
+ * @api public\n\
+ */\n\
+\n\
+function List(store){\n\
+  if(!(this instanceof List)) return new List(store);\n\
+  //TODO: should mixin store\n\
+  // this.store = new Store(store);\n\
+  this.store = store;\n\
+  this.items = [];\n\
+}\n\
+\n\
+\n\
+/**\n\
+ * Bind HTML element with store.\n\
+ * Takes the first child as an item renderer.\n\
+ * \n\
+ * @param  {HTMLElement} node \n\
+ * @api public\n\
+ */\n\
+\n\
+List.prototype.main =  \n\
+List.prototype.list = function(node) {\n\
+  var first = node.children[0],\n\
+      _this = this;\n\
+\n\
+  this.node = node;\n\
+  this.clone = first.cloneNode(true);\n\
+  node.removeChild(first);\n\
+\n\
+\n\
+  this.store.on('change', function(key, value){\n\
+    var item = _this.items[key];\n\
+    if(item) {\n\
+      //NOTE: should we unbind in store when we reset?\n\
+      item.reset(value); //do our own emitter to have scope\n\
+    } else {\n\
+      //create item renderer\n\
+      _this.addItem(key, value);\n\
+    }\n\
+  });\n\
+\n\
+  this.store.on('deleted', function(key, idx){\n\
+    _this.delItem(idx);\n\
+  });\n\
+\n\
+  this.store.loop(this.addItem, this);\n\
+};\n\
+\n\
+/**\n\
+ * Return index of node in list.\n\
+ * @param  {HTMLelement} node \n\
+ * @return {Number}  \n\
+ * @api public\n\
+ */\n\
+\n\
+List.prototype.indexOf = function(node) {\n\
+  return index(this.node.children, node);\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Loop over the list items.\n\
+ * Execute callback and pass store item.\n\
+ * \n\
+ * @param  {Function} cb    \n\
+ * @param  {Object}   scope \n\
+ * @api public\n\
+ */\n\
+\n\
+List.prototype.loop = function(cb, scope) {\n\
+  each(this.items, function(idx, item){\n\
+    cb.call(scope, item.store);\n\
+  });\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Add list item.\n\
+ * \n\
+ * @param {Object} obj\n\
+ * @api public\n\
+ */\n\
+\n\
+List.prototype.add = function(obj) {\n\
+  //store push?\n\
+  //in the future, we could use a position\n\
+  this.store.set(this.store.data.length, obj);\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Set list item.\n\
+ * \n\
+ * @param {HTMLElement|Number} idx \n\
+ * @param {Object} obj\n\
+ * @api public\n\
+ */\n\
+\n\
+List.prototype.set = function(idx, obj) {\n\
+  if(idx instanceof Element) idx = this.indexOf(idx);  \n\
+  // if(idx instanceof HTMLElement) idx = this.indexOf(idx);\n\
+  var item = this.items[idx].store;\n\
+  each(obj, function(key, val){\n\
+    item.set(key, val);\n\
+  });\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Delete item(s) in list.\n\
+ * \n\
+ * @api public\n\
+ */\n\
+\n\
+List.prototype.del = function(arg, scope) {\n\
+  //we should optimize store reset\n\
+  if(arg === undefined) return this.store.reset([]);\n\
+  if(typeof arg === 'function') {\n\
+    //could we handle that with inverse loop and store loop?\n\
+    var l = this.store.data.length;\n\
+    while(l--) {\n\
+      if(arg.call(scope, this.items[l].store)){\n\
+        this.store.del(l);\n\
+      }\n\
+    }\n\
+  }\n\
+\n\
+  //ie8 doesn't support HTMLElement and instanceof with left assignment != object\n\
+  this.store.del(typeof arg === 'number' ? arg : this.indexOf(arg));\n\
+  //this.store.del(arg instanceof HTMLElement ? this.indexOf(arg): arg);\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Create item renderer from data.\n\
+ * @param  {Object} data \n\
+ * @api private\n\
+ */\n\
+\n\
+List.prototype.addItem = function(key, data) {\n\
+  var item = new ItemRenderer(this.clone, data);\n\
+  this.items[key] = item;\n\
+  this.node.appendChild(item.dom);\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Delete item.\n\
+ * @param  {Number} idx index\n\
+ * @api private\n\
+ */\n\
+\n\
+List.prototype.delItem = function(idx) {\n\
+    var item = this.items[idx];\n\
+    item.unbind(this.node);\n\
+    this.items.splice(idx, 1);\n\
+    item = null; //for garbage collection\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Item renderer.\n\
+ * Represents the item that going to be repeated.\n\
+ * @param {HTMLElement} node \n\
+ * @param {Store} data \n\
+ * @api private\n\
+ */\n\
+\n\
+function ItemRenderer(node, data){\n\
+  //NOTE: is it more perfomant to work with string?\n\
+  this.dom = node.cloneNode(true);\n\
+  this.store = new Store(data);\n\
+  this.binding = binding(this.store); //we have to have a boolean parameter to apply interpolation &|| plugins\n\
+  this.binding.scan(this.dom);\n\
+}\n\
+\n\
+\n\
+/**\n\
+ * Unbind an item renderer from its ancestor.\n\
+ * @param  {HTMLElement} node \n\
+ * @api private\n\
+ */\n\
+\n\
+ItemRenderer.prototype.unbind = function(node) {\n\
+  //NOTE: is there something else to do to clean the memory?\n\
+  this.store.off();\n\
+  node.removeChild(this.dom);\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Reset iten renderer.\n\
+ * @param  {Object} data \n\
+ * @api private\n\
+ */\n\
+\n\
+ItemRenderer.prototype.reset = function(data) {\n\
+  this.store.reset(data);\n\
+};\n\
+\n\
+//@ sourceURL=bredele-repeat-brick/index.js"
+));
+require.register("bredele-events-brick/index.js", Function("exports, require, module",
+"/**\n\
+ * Dependencies\n\
+ */\n\
+\n\
+var ev = require('event');\n\
+\n\
+/**\n\
+ * Map touch events.\n\
+ * @type {Object}\n\
+ * @api private\n\
+ */\n\
+\n\
+var mapper = {\n\
+\t'click' : 'touchend',\n\
+\t'mousedown' : 'touchstart',\n\
+\t'mouseup' : 'touchend',\n\
+\t'mousemove' : 'touchmove'\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Expose 'Event plugin'\n\
+ */\n\
+\n\
+module.exports = Events;\n\
+\n\
+\n\
+/**\n\
+ * Event plugin constructor\n\
+ * @param {Object} view event plugin scope\n\
+ * @param {Boolean} isTouch optional\n\
+ * @api public\n\
+ */\n\
+\n\
+function Events(view, isTouch){\n\
+  if(!(this instanceof Events)) return new Events(view, isTouch);\n\
+  this.view = view;\n\
+  this.listeners = [];\n\
+  this.isTouch = isTouch || (window.ontouchstart !== undefined);\n\
+}\n\
+\n\
+\n\
+\n\
+/**\n\
+ * Listen events.\n\
+ * @param {HTMLElement} node \n\
+ * @param {String} type event's type\n\
+ * @param {String} fn view's callback name\n\
+ * @param {String} capture useCapture\n\
+ * @api private\n\
+ */\n\
+\n\
+Events.prototype.on = function(node, type, fn, capture) {\n\
+  var _this = this,\n\
+     cb = function(target, e) {\n\
+      _this.view[fn].call(_this.view, target, e, node); //we should pass target\n\
+     };\n\
+  //todo: event should return the node as well...it's too complicated\n\
+  this.listeners\n\
+    .push([node].concat(ev(node, type, (typeof fn === 'function') ? fn : cb, (capture === 'true'))));\n\
+};\n\
+\n\
+\n\
+\n\
+/**\n\
+ * Map events (desktop and mobile)\n\
+ * @param  {String} type event's name\n\
+ * @return {String} mapped event\n\
+ */\n\
+\n\
+Events.prototype.map = function(type) {\n\
+\treturn this.isTouch ? (mapper[type] || type) : type;\n\
+};\n\
+\n\
+\n\
+/**\n\
+ * Remove all listeners.\n\
+ * @api public\n\
+ */\n\
+\n\
+Events.prototype.destroy = function() {\n\
+  for(var l = this.listeners.length; l--;) {\n\
+    var listener = this.listeners[l];\n\
+    ev.off(listener[0], listener[1], listener[2], listener[3]);\n\
+  }\n\
+  this.listeners = [];\n\
+};\n\
+\n\
+//@ sourceURL=bredele-events-brick/index.js"
+));
+require.register("component-classes/index.js", Function("exports, require, module",
+"/**\n\
+ * Module dependencies.\n\
+ */\n\
+\n\
+var index = require('indexof');\n\
+\n\
+/**\n\
+ * Whitespace regexp.\n\
+ */\n\
+\n\
+var re = /\\s+/;\n\
+\n\
+/**\n\
+ * toString reference.\n\
+ */\n\
+\n\
+var toString = Object.prototype.toString;\n\
+\n\
+/**\n\
+ * Wrap `el` in a `ClassList`.\n\
+ *\n\
+ * @param {Element} el\n\
+ * @return {ClassList}\n\
+ * @api public\n\
+ */\n\
+\n\
+module.exports = function(el){\n\
+  return new ClassList(el);\n\
+};\n\
+\n\
+/**\n\
+ * Initialize a new ClassList for `el`.\n\
+ *\n\
+ * @param {Element} el\n\
+ * @api private\n\
+ */\n\
+\n\
+function ClassList(el) {\n\
+  if (!el) throw new Error('A DOM element reference is required');\n\
+  this.el = el;\n\
+  this.list = el.classList;\n\
+}\n\
+\n\
+/**\n\
+ * Add class `name` if not already present.\n\
+ *\n\
+ * @param {String} name\n\
+ * @return {ClassList}\n\
+ * @api public\n\
+ */\n\
+\n\
+ClassList.prototype.add = function(name){\n\
+  // classList\n\
+  if (this.list) {\n\
+    this.list.add(name);\n\
+    return this;\n\
+  }\n\
+\n\
+  // fallback\n\
+  var arr = this.array();\n\
+  var i = index(arr, name);\n\
+  if (!~i) arr.push(name);\n\
+  this.el.className = arr.join(' ');\n\
+  return this;\n\
+};\n\
+\n\
+/**\n\
+ * Remove class `name` when present, or\n\
+ * pass a regular expression to remove\n\
+ * any which match.\n\
+ *\n\
+ * @param {String|RegExp} name\n\
+ * @return {ClassList}\n\
+ * @api public\n\
+ */\n\
+\n\
+ClassList.prototype.remove = function(name){\n\
+  if ('[object RegExp]' == toString.call(name)) {\n\
+    return this.removeMatching(name);\n\
+  }\n\
+\n\
+  // classList\n\
+  if (this.list) {\n\
+    this.list.remove(name);\n\
+    return this;\n\
+  }\n\
+\n\
+  // fallback\n\
+  var arr = this.array();\n\
+  var i = index(arr, name);\n\
+  if (~i) arr.splice(i, 1);\n\
+  this.el.className = arr.join(' ');\n\
+  return this;\n\
+};\n\
+\n\
+/**\n\
+ * Remove all classes matching `re`.\n\
+ *\n\
+ * @param {RegExp} re\n\
+ * @return {ClassList}\n\
+ * @api private\n\
+ */\n\
+\n\
+ClassList.prototype.removeMatching = function(re){\n\
+  var arr = this.array();\n\
+  for (var i = 0; i < arr.length; i++) {\n\
+    if (re.test(arr[i])) {\n\
+      this.remove(arr[i]);\n\
+    }\n\
+  }\n\
+  return this;\n\
+};\n\
+\n\
+/**\n\
+ * Toggle class `name`, can force state via `force`.\n\
+ *\n\
+ * For browsers that support classList, but do not support `force` yet,\n\
+ * the mistake will be detected and corrected.\n\
+ *\n\
+ * @param {String} name\n\
+ * @param {Boolean} force\n\
+ * @return {ClassList}\n\
+ * @api public\n\
+ */\n\
+\n\
+ClassList.prototype.toggle = function(name, force){\n\
+  // classList\n\
+  if (this.list) {\n\
+    if (\"undefined\" !== typeof force) {\n\
+      if (force !== this.list.toggle(name, force)) {\n\
+        this.list.toggle(name); // toggle again to correct\n\
+      }\n\
+    } else {\n\
+      this.list.toggle(name);\n\
+    }\n\
+    return this;\n\
+  }\n\
+\n\
+  // fallback\n\
+  if (\"undefined\" !== typeof force) {\n\
+    if (!force) {\n\
+      this.remove(name);\n\
+    } else {\n\
+      this.add(name);\n\
+    }\n\
+  } else {\n\
+    if (this.has(name)) {\n\
+      this.remove(name);\n\
+    } else {\n\
+      this.add(name);\n\
+    }\n\
+  }\n\
+\n\
+  return this;\n\
+};\n\
+\n\
+/**\n\
+ * Return an array of classes.\n\
+ *\n\
+ * @return {Array}\n\
+ * @api public\n\
+ */\n\
+\n\
+ClassList.prototype.array = function(){\n\
+  var str = this.el.className.replace(/^\\s+|\\s+$/g, '');\n\
+  var arr = str.split(re);\n\
+  if ('' === arr[0]) arr.shift();\n\
+  return arr;\n\
+};\n\
+\n\
+/**\n\
+ * Check if class `name` is present.\n\
+ *\n\
+ * @param {String} name\n\
+ * @return {ClassList}\n\
+ * @api public\n\
+ */\n\
+\n\
+ClassList.prototype.has =\n\
+ClassList.prototype.contains = function(name){\n\
+  return this.list\n\
+    ? this.list.contains(name)\n\
+    : !! ~index(this.array(), name);\n\
+};\n\
+//@ sourceURL=component-classes/index.js"
+));
+require.register("bredele-hidden-brick/index.js", Function("exports, require, module",
+"var classes = require('classes');\n\
+\n\
+\n\
+function toggle(node, val) {\n\
+\tif(val) {\n\
+\t\tclasses(node).remove('hidden');\n\
+\t} else {\n\
+\t\tclasses(node).add('hidden');\n\
+\t}\n\
+}\n\
+\n\
+/**\n\
+ * Conditionally add 'hidden' class.\n\
+ * @param {HTMLElement} node \n\
+ * @param {String} attr model's attribute\n\
+ * @api public\n\
+ */\n\
+\n\
+module.exports = function(node, attr) {\n\
+\tvar bool = (attr[0] === '!');\n\
+\tif(bool) attr = attr.substring(1);\n\
+\tthis.on('change ' + attr, function(val) {\n\
+\t\ttoggle(node, bool ? !val : val);\n\
+\t});\n\
+};\n\
+//@ sourceURL=bredele-hidden-brick/index.js"
+));
+require.register("todo/index.js", Function("exports, require, module",
+"//dependencies\n\
+\n\
+var lego = require('lego'),\n\
+    html = require('./todo.html'),\n\
+    list = require('repeat-brick'),\n\
+    Store = require('store');\n\
+\n\
+//init\n\
+\n\
+var app = lego(html, {\n\
+\titems: 0,\n\
+\tpending: 0\n\
+});\n\
+\n\
+//TODO:refactor repeat to transform object into store\n\
+var todos = list(new Store([]));\n\
+\n\
+\n\
+app.compute('completed', function() {\n\
+\treturn this.items - this.pending;\n\
+});\n\
+\n\
+\n\
+//controller \n\
+\n\
+function stats(cb) {\n\
+\treturn function(target) {\n\
+\t\tvar count = 0;\n\
+\n\
+\t\tcb.call(null, target.parentElement, target); //remove ev when filter submit event\n\
+\t\ttodos.loop(function(todo) {\n\
+\t\t\tif(todo.get('status') === 'pending') count++;\n\
+\t\t});\n\
+\t\tapp.set('items', todos.store.data.length); //have size\n\
+\t\tapp.set('pending', count);\n\
+\t};\n\
+}\n\
+\n\
+var controller = {\n\
+\t//we should have an input plugin\n\
+\tadd: stats(function(parent, target) {\n\
+\t\tvar val = target.value;\n\
+\t\tif(val) {\n\
+\t\t\ttodos.add({\n\
+\t\t\t\tstatus : 'pending',\n\
+\t\t\t\tlabel : val\n\
+\t\t\t});\n\
+\t\t\ttarget.value = \"\";\n\
+\t\t}\n\
+\t}),\n\
+\n\
+\ttoggle : stats(function(node, target) {\n\
+\t\ttodos.set(node, {\n\
+\t\t\tstatus :  target.checked ? 'completed' : 'pending'\n\
+\t\t});\n\
+\t}),\n\
+\n\
+\ttoggleAll : stats(function(node, target) {\n\
+\t\tvar status = target.checked ? 'completed' : 'pending';\n\
+\t\ttodos.loop(function(todo) {\n\
+\t\t\ttodo.set('status', status);\n\
+\t\t});\n\
+\t}),\n\
+\n\
+\tdelAll : stats(function() {\n\
+\t\ttodos.del(function(todo) {\n\
+\t\t\treturn todo.get('status') === 'completed';\n\
+\t\t});\n\
+\t}),\n\
+\n\
+\tdel : stats(function(node) {\n\
+\t\ttodos.del(node);\n\
+\t})\n\
+};\n\
+\n\
+\n\
+//bindings\n\
+\n\
+app.add('todos', todos);\n\
+app.add('events', require('events-brick')(controller));\n\
+app.add('visible', require('hidden-brick'));\n\
+app.build(document.body);//@ sourceURL=todo/index.js"
+));
 require.register("home/index.js", Function("exports, require, module",
 "require('hello');\n\
 require('computed');\n\
-require('expressions');//@ sourceURL=home/index.js"
+require('expressions');\n\
+require('todo');//@ sourceURL=home/index.js"
 ));
+
+
+
 
 
 
@@ -1629,6 +2245,37 @@ require.register("computed/computed.html", Function("exports, require, module",
 ));
 require.register("expressions/expressions.html", Function("exports, require, module",
 "module.exports = '<span>The string <code>{{ random }}</code> has {{ random.length }} character{{ random.length > 1 ? \\'s\\' : \\'\\'}}</span>';//@ sourceURL=expressions/expressions.html"
+));
+
+
+
+require.register("todo/todo.html", Function("exports, require, module",
+"module.exports = '<section id=\"todoapp\">\\n\
+  <header id=\"header\">\\n\
+    <h1>todos</h1>\\n\
+    <input id=\"new-todo\" placeholder=\"What needs to be done?\" events=\"on:keypress > 13,add\" autofocus>\\n\
+  </header>\\n\
+  <section id=\"main\">\\n\
+    <input id=\"toggle-all\" type=\"checkbox\" events=\"on:click,toggleAll\">\\n\
+    <label for=\"toggle-all\">Mark all as complete</label>\\n\
+    <ul id=\"todo-list\" events=\"on: click .toggle,toggle;on:click .destroy,del;on:dbclick .label,edit\" todos>\\n\
+      <li class=\"{{ status }}\">\\n\
+        <input class=\"toggle\" type=\"checkbox\">\\n\
+        <label class=\"label\">{{ label }}</label>\\n\
+        <button class=\"destroy\"></button>\\n\
+      </li>\\n\
+    </ul>\\n\
+  </section>\\n\
+  <footer id=\"footer\" class=\"hidden\" visible=\"items\">\\n\
+    <span id=\"todo-count\">\\n\
+      <strong>{{ \\'\\' + pending }}</strong> \\n\
+      item{{ pending !== 1 ? \\'s\\' : \\'\\' }} left\\n\
+    </span>\\n\
+    <button id=\"clear-completed\" events=\"on:click,delAll\" class=\"{{ completed ? \\'\\' : \\'hidden\\' }}\">\\n\
+      Clear completed ({{ completed }})\\n\
+    </button>\\n\
+  </footer>\\n\
+</section>';//@ sourceURL=todo/todo.html"
 ));
 require.alias("home/index.js", "lego-examples/deps/Home/index.js");
 require.alias("home/index.js", "lego-examples/deps/Home/index.js");
@@ -1844,4 +2491,138 @@ require.alias("bredele-each/index.js", "bredele-each/index.js");
 require.alias("bredele-brick/index.js", "bredele-brick/index.js");
 require.alias("bredele-lego/index.js", "bredele-lego/index.js");
 require.alias("expressions/index.js", "expressions/index.js");
+require.alias("todo/index.js", "home/deps/todo/index.js");
+require.alias("todo/index.js", "home/deps/todo/index.js");
+require.alias("bredele-lego/index.js", "todo/deps/lego/index.js");
+require.alias("bredele-lego/index.js", "todo/deps/lego/index.js");
+require.alias("bredele-artery/index.js", "bredele-lego/deps/artery/index.js");
+require.alias("bredele-artery/lib/app.js", "bredele-lego/deps/artery/lib/app.js");
+require.alias("bredele-artery/index.js", "bredele-lego/deps/artery/index.js");
+require.alias("bredele-store/index.js", "bredele-artery/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-artery/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-emitter/index.js", "bredele-artery/deps/emitter/index.js");
+
+require.alias("bredele-artery/index.js", "bredele-artery/index.js");
+require.alias("bredele-brick/index.js", "bredele-lego/deps/brick/index.js");
+require.alias("bredele-brick/index.js", "bredele-lego/deps/brick/index.js");
+require.alias("bredele-binding/index.js", "bredele-brick/deps/binding/index.js");
+require.alias("bredele-binding/index.js", "bredele-brick/deps/binding/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("component-indexof/index.js", "bredele-supplant/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-supplant/deps/trim/index.js");
+
+require.alias("bredele-supplant/index.js", "bredele-supplant/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-indexof/index.js", "bredele-binding/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-binding/deps/trim/index.js");
+
+require.alias("bredele-binding/index.js", "bredele-binding/index.js");
+require.alias("bredele-store/index.js", "bredele-brick/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-brick/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-brick/index.js", "bredele-brick/index.js");
+require.alias("bredele-lego/index.js", "bredele-lego/index.js");
+require.alias("bredele-repeat-brick/index.js", "todo/deps/repeat-brick/index.js");
+require.alias("bredele-repeat-brick/index.js", "todo/deps/repeat-brick/index.js");
+require.alias("bredele-binding/index.js", "bredele-repeat-brick/deps/binding/index.js");
+require.alias("bredele-binding/index.js", "bredele-repeat-brick/deps/binding/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("component-indexof/index.js", "bredele-supplant/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-supplant/deps/trim/index.js");
+
+require.alias("bredele-supplant/index.js", "bredele-supplant/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-indexof/index.js", "bredele-binding/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-binding/deps/trim/index.js");
+
+require.alias("bredele-binding/index.js", "bredele-binding/index.js");
+require.alias("bredele-store/index.js", "bredele-repeat-brick/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-repeat-brick/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-indexof/index.js", "bredele-repeat-brick/deps/indexof/index.js");
+
+require.alias("bredele-each/index.js", "bredele-repeat-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-repeat-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-repeat-brick/index.js", "bredele-repeat-brick/index.js");
+require.alias("bredele-events-brick/index.js", "todo/deps/events-brick/index.js");
+require.alias("bredele-events-brick/index.js", "todo/deps/events-brick/index.js");
+require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
+require.alias("bredele-event/index.js", "bredele-events-brick/deps/event/index.js");
+require.alias("component-indexof/index.js", "bredele-event/deps/indexof/index.js");
+
+require.alias("bredele-event/index.js", "bredele-event/index.js");
+require.alias("bredele-events-brick/index.js", "bredele-events-brick/index.js");
+require.alias("bredele-hidden-brick/index.js", "todo/deps/hidden-brick/index.js");
+require.alias("bredele-hidden-brick/index.js", "todo/deps/hidden-brick/index.js");
+require.alias("component-classes/index.js", "bredele-hidden-brick/deps/classes/index.js");
+require.alias("component-indexof/index.js", "component-classes/deps/indexof/index.js");
+
+require.alias("bredele-hidden-brick/index.js", "bredele-hidden-brick/index.js");
+require.alias("bredele-store/index.js", "todo/deps/store/index.js");
+require.alias("bredele-store/index.js", "todo/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("todo/index.js", "todo/index.js");
 require.alias("home/index.js", "home/index.js");
