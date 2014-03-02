@@ -1,14 +1,30 @@
 //dependencies
 
-var lego = require('lego');
+var lego = require('lego'),
+		trim = require('trim');
+
 var html = require('./console.html');
 
 //global to test
-shell = lego.box();
+var shell = lego.box();
 
 //create view
 
-var view = lego(html);
+var view = lego(html, []);
+view.add('logs', require('repeat-brick')(view));
+view.add('ev', require('events-brick')({
+	send: function(target) {
+		var cmd = trim(target.value).replace(/\s+/g, ' ').split(' ');
+		//the function as arg is bad!!
+		//store should have a size handler
+		shell.emit(cmd.shift(), cmd, function(str){
+			view.set(view.data.length, {
+				log: str
+			})
+		});
+		target.value = '';
+	}
+}));
 
 //insert view into body
 

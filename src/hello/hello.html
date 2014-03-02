@@ -1,11 +1,10 @@
-<div class="lego">
+<div class="tmpl">
 	<style>
 	  .brick {
-	  	background: {{ color }};
-	  	min-width:80px;
-	  	height:80px;
+	  	color: {{ color }};
+	  	margin-left: 40px;
 	  }
 	</style>
-	<input type="text" model="label" value="Hello World">
-	<div class="brick">{{ label }}</div>
+	<input type="text" model="label" value="Hello World!">
+	<span class="brick">{{ label }}</span>
 </div>

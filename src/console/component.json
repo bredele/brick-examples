@@ -3,7 +3,9 @@
   "description": "console",
   "dependencies": {
     "bredele/lego" : "*",
-    "bredele/input-brick" : "*"
+    "bredele/events-brick" : "*",
+    "bredele/repeat-brick" : "*",
+    "component/trim" : "*"
   },
   "development": {},
   "main": "index.js",

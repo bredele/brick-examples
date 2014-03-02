@@ -10,7 +10,7 @@
   },
   "development": {},
   "main": "index.js",
-  "templates" : ["todo.html"],
+  "templates" : ["todo.html", "description.html"],
   "styles" : ["todo.css"],
   "scripts": [
     "index.js"

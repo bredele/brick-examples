@@ -6,7 +6,7 @@
   },
   "development": {},
   "main": "index.js",
-  "templates" : ["expressions.html"],
+  "templates" : ["expressions.html","description.html"],
   "scripts": [
     "index.js"
   ]

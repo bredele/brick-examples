@@ -19,13 +19,16 @@ var search = new Search();
 
 var sidebar = lego(document.querySelector('.sidebar'), examples);
 var container = lego(document.querySelector('.main')).build();
+//LEGO should have convenient handler to avoid that
+var description = container.el.querySelector('.description');
 
 //create console stack
 var tabs = new Stack(document.querySelector('.sidebar-stack'));
-tabs.add('examples', sidebar.el.querySelector('.list-examples'), true);
-var console = require('console');
-tabs.add('console', console.el);
-app.use('console', console)
+var list = sidebar.el.querySelector('.list-examples');
+tabs.add('examples', list, true);
+var shell = require('console');
+tabs.add('console', shell.el);
+app.use('console', shell);
 //create examples stack
 //NOTE: use stack brick
 
@@ -47,25 +50,15 @@ var caret = lego('<div class="indicator"><span></span></div>');
 
 sidebar.add('examples', require('repeat-brick')(sidebar));
 
-// sidebar.add('events', events({
-// 	list: function(){
-// 		tabs.show('examples');
-// 	},
-// 	console: function(){
-// 		console.log('console');
-// 		tabs.show('console');
-// 	}
-// }));
-
 sidebar.add('control', require('control-brick')({
 	active: function(target) {
 		var ref = target.getAttribute('href').substring(1);
 		stack.show(ref);
 		container.reset(examples[ref]);
+		description.innerHTML = examples[ref].description;
 		caret.build(target);
 	},
 	select: function(target){
-		console.log(target.innerHTML.toLowerCase());
 		tabs.show(target.innerHTML.toLowerCase());
 	}
 }));
@@ -83,4 +76,14 @@ sidebar.build();
 var first = sidebar.el.querySelectorAll('.example-item')[0];
 caret.build(first);
 stack.show('hello');
+description.innerHTML = examples['hello'].description;
 container.reset(examples['hello']);
+
+app.on('console/go', function(arg) {
+	var name = arg[0];
+	//refactor with active
+	stack.show(name);
+	description.innerHTML = examples[name].description;
+	container.reset(examples[name]);
+	caret.build(list.querySelector('[href*='+name+']'));
+});

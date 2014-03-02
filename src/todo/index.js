@@ -85,18 +85,19 @@ view.build();
 
 //export
 
-app.on('console/todo', function() {
+app.on('console/todo', function(arg, handler) {
 	var start = new Date();
 	var arr = [];
-	for(var l = 200; l--;) {
+	for(var l = arg[0]; l--;) {
 		arr.push({
 			status : 'pending',
-			label : 'foo'
+			label : arg[1]
 		});
 	}
 	todos.store.reset(arr);
-	console.log(new Date() - start);
+	handler('benchmark ' + arg[0] + ' items: ' + (new Date() - start) + 'ms');
 });
 
 module.exports = app;
 module.exports.el = view.el;
+module.exports.description = require('./description.html');

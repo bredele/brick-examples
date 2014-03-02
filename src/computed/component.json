@@ -7,7 +7,7 @@
   },
   "development": {},
   "main": "index.js",
-  "templates" : ["computed.html"],
+  "templates" : ["computed.html", "description.html"],
   "scripts": [
     "index.js"
   ]

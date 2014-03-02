@@ -33,3 +33,4 @@ view.build();
 
 module.exports = app;
 module.exports.el = view.el;
+module.exports.description = require('./description.html');

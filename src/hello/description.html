@@ -1,0 +1,17 @@
+<p>Let's start with the famous hello world! <a href="http://github.com/bredele/lego">Lego</a> allows you to substitute variables into a template string or a dom element as following:</p>
+<pre><code class="lang-html">&lt;div class="lego"&gt;
+    &lt;style&gt;
+      .brick {
+          color: {{ color }};
+      }
+    &lt;/style&gt;
+    &lt;span class="brick"&gt;{{ label }}&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Nothing more simple! </p>
+<pre><code class="lang-js">var view = lego(tmpl).build();
+view.set('label', 'Hello');
+</code></pre>
+<blockquote>
+<p><strong>Tips</strong>: type <strong><code>hello color blue</code></strong> or <strong><code>hello label world</code></strong> in the console to update the demo!</p>
+</blockquote>

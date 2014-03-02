@@ -7,7 +7,7 @@
   },
   "development": {},
   "main": "index.js",
-  "templates" : ["stress.html"],
+  "templates" : ["stress.html", "description.html"],
   "scripts": [
     "index.js"
   ]

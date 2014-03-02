@@ -7,7 +7,7 @@
   },
   "development": {},
   "main": "index.js",
-  "templates" : ["hello.html"],
+  "templates" : ["hello.html", "description.html"],
   "scripts": [
     "index.js"
   ]

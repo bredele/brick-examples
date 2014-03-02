@@ -42,6 +42,13 @@ input[type="checkbox"] {
   outline: none;
 }
 
+input {
+	padding: 10px 10px;
+	color: #999;
+	border: 1px solid #ddd;
+	outline:0;
+}
+
 ul {
 	list-style:none;
 	padding:0;margin-top: 0;
@@ -102,6 +109,7 @@ h3 {
 }
 
 .main {
+	min-width: 500px;
 	left:320px;
 }
 
@@ -231,4 +239,13 @@ background-color: #f2f2eb;
 
 .share {
 	margin-top:20px;
+}
+
+.description a {
+	color:#038035;
+}
+
+.description pre {
+	background: #f2f2eb;
+	padding:20px;
 }

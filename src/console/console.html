@@ -3,7 +3,10 @@
 		<div class="editor animate fadeIn">
 			<div class="menu"></div><!-- end .menu -->
 			<div class="code">
-				<textarea class="text">Type something!</textarea>
+				<input class="text" ev="on:keypress > 13, send" placeholder="Type something!">
+				<ul class="logs" logs>
+					<p>{{log}}</p>
+				</ul>
 			</div>
 		</div>
 	</section>	

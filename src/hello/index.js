@@ -9,7 +9,7 @@ var app = lego.box();
 
 var view = lego(html, {
 	color: 'red',
-	label: 'Hello World'
+	label: 'Hello World!'
 });
 
 
@@ -25,5 +25,9 @@ view.build();
 
 module.exports = app;
 module.exports.el = view.el;
+module.exports.description = require('./description.html');
 
 
+app.on('console/hello', function(arg) {
+	view.set(arg[0], arg[1]);
+});

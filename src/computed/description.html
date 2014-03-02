@@ -1,0 +1,8 @@
+<p>In <a href="http://github.com/bredele/lego">lego</a> you can compute properties in two ways:</p>
+<pre><code class="lang-html">&lt;span&gt;{{ firstName + ' ' + lastName }}&lt;/span&gt;
+</code></pre>
+<p>or</p>
+<pre><code class="lang-js">view.compute('name', function() {
+    return this.firstName + ' ' + this.lastName;
+});
+</code></pre>
