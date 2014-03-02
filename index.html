@@ -15,20 +15,18 @@
 				<input class="search-field" placeholder="Search all examples" type="text" search="on:input,search">
 			</header>
 			<div>
-				<ul class="tabs">
-			  <li class="tabs-li active display-inline" >
-			    <h5><a data-ember-action="281">Examples</a></h5>
-			  </li>
-			  <li class="tabs-li">
-			    <h5><a data-ember-action="283">Console</a></h5>
-			  </li>
-			</ul>
+				<ul class="tabs" control="radio:click .tabs-li, select">
+				  <li class="tabs-li active" >Examples</li>
+				  <li class="tabs-li">Console</li>
+				</ul>
 			</div>
-			<ul class="list-examples" control="radio:click .example-item,active" examples>
-				<a href="#{{name}}" class="searchable example-item" data-search="{{keywords}}">
-					<span class="example-title">{{label}}</span>
-				</a>
-			</ul>
+			<div class="sidebar-stack">
+				<ul class="list-examples" control="radio:click .example-item,active" examples>
+					<a href="#{{name}}" class="searchable example-item" data-search="{{keywords}}">
+						<span class="example-title">{{label}}</span>
+					</a>
+				</ul>
+			</div>
 		</div>
 		<div class="main">
 			<header class="main-header">

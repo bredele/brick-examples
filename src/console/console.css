@@ -1,0 +1,32 @@
+.console {
+	padding:10px;
+	min-height: 300px;
+}
+.shell {
+	min-height: 300px;
+	padding:10px;
+	color: #f1f1f1;
+	font-size: 12px;
+	line-height: 19px;
+	background-color: #222;
+	border: 1px solid #ddd;
+}
+.log {
+	font-family: monospace;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	overflow-x: scroll;
+	counter-reset: line-numbering;
+}
+
+.console-input {
+	height:28px;
+
+	font-size: 13px;
+	padding:8px 14px;
+	width:100%;
+	color:#f1f1f1;
+	border:0;
+	outline:0;
+	background:rgba(255,255,255,.5);
+}

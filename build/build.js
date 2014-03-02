@@ -2261,12 +2261,11 @@ var html = require('./stress.html');\n\
 //create view\n\
 \n\
 var view = lego(html, {\n\
-\tcolor: 'red',\n\
-\tlabel: 'Hello World'\n\
+\tcolor: 'red'\n\
 });\n\
 \n\
 var anchor = view.el.querySelector('.brick');\n\
-for(var l = 500; l--;) {\n\
+for(var l = 1000; l--;) {\n\
 \tanchor.insertAdjacentHTML('beforeend', '<span>{{ label }}</span>');\n\
 }\n\
 \n\
@@ -2474,6 +2473,28 @@ app.build();\n\
 \n\
 module.exports = app.el;//@ sourceURL=todo/index.js"
 ));
+require.register("console/index.js", Function("exports, require, module",
+"//dependencies\n\
+\n\
+var lego = require('lego');\n\
+var html = require('./console.html');\n\
+\n\
+\n\
+//create view\n\
+\n\
+var console = lego(html);\n\
+\n\
+//insert view into body\n\
+\n\
+console.build();\n\
+\n\
+//export\n\
+\n\
+module.exports = console.el;\n\
+\n\
+\n\
+//@ sourceURL=console/index.js"
+));
 require.register("home/index.js", Function("exports, require, module",
 "\n\
 //dependencies\n\
@@ -2481,6 +2502,7 @@ require.register("home/index.js", Function("exports, require, module",
 var examples = require('./examples'),\n\
 \t\tlego = require('lego'),\n\
 \t\tStack = require('domstack'),\n\
+\t\tevents= require('events-brick'),\n\
 \t\tSearch = require('search');\n\
 \n\
 //initialize search field\n\
@@ -2493,7 +2515,13 @@ var search = new Search();\n\
 \n\
 var sidebar = lego(document.querySelector('.sidebar'), examples);\n\
 var container = lego(document.querySelector('.main')).build();\n\
-//create stack\n\
+\n\
+//create console stack\n\
+var tabs = new Stack(document.querySelector('.sidebar-stack'));\n\
+tabs.add('examples', sidebar.el.querySelector('.list-examples'), true);\n\
+tabs.add('console', require('console'));\n\
+\n\
+//create examples stack\n\
 //NOTE: use stack brick\n\
 \n\
 var stack = new Stack(document.querySelector('.stack'));\n\
@@ -2503,20 +2531,38 @@ for(var name in examples) {\n\
 \n\
 \n\
 //create carret\n\
+\n\
 var caret = lego('<div class=\"indicator\"><span></span></div>');\n\
 \n\
 //add bricks\n\
 //NOTE: repeat should take view by default\n\
+\n\
 sidebar.add('examples', require('repeat-brick')(sidebar));\n\
+\n\
+// sidebar.add('events', events({\n\
+// \tlist: function(){\n\
+// \t\ttabs.show('examples');\n\
+// \t},\n\
+// \tconsole: function(){\n\
+// \t\tconsole.log('console');\n\
+// \t\ttabs.show('console');\n\
+// \t}\n\
+// }));\n\
+\n\
 sidebar.add('control', require('control-brick')({\n\
 \tactive: function(target) {\n\
 \t\tvar ref = target.getAttribute('href').substring(1);\n\
 \t\tstack.show(ref);\n\
 \t\tcontainer.reset(examples[ref]);\n\
 \t\tcaret.build(target);\n\
+\t},\n\
+\tselect: function(target){\n\
+\t\tconsole.log(target.innerHTML.toLowerCase());\n\
+\t\ttabs.show(target.innerHTML.toLowerCase());\n\
 \t}\n\
 }));\n\
-sidebar.add('search', require('events-brick')({\n\
+\n\
+sidebar.add('search', events({\n\
 \tsearch: function(target) {\n\
 \t\tsearch.run(target.value);\n\
 \t}\n\
@@ -2529,9 +2575,7 @@ sidebar.build();\n\
 var first = sidebar.el.querySelectorAll('.example-item')[0];\n\
 caret.build(first);\n\
 stack.show('hello');\n\
-container.reset(examples['hello']);\n\
-\n\
-// <div class=\"indicator\"><span></span></div>//@ sourceURL=home/index.js"
+container.reset(examples['hello']);//@ sourceURL=home/index.js"
 ));
 require.register("home/examples.js", Function("exports, require, module",
 "\n\
@@ -2582,6 +2626,7 @@ module.exports = {\n\
 \t}\n\
 };//@ sourceURL=home/examples.js"
 ));
+
 
 
 
@@ -2670,6 +2715,14 @@ require.register("todo/todo.html", Function("exports, require, module",
     </button>\\n\
   </footer>\\n\
 </section>';//@ sourceURL=todo/todo.html"
+));
+require.register("console/console.html", Function("exports, require, module",
+"module.exports = '<div class=\"console\">\\n\
+\t<div class=\"shell\">\\n\
+\t\t<input class=\"console-input\" type=\"text\">\\n\
+\t\t<pre class=\"log\"></pre>\\n\
+\t</div>\\n\
+</div>';//@ sourceURL=console/console.html"
 ));
 require.alias("home/index.js", "lego-examples/deps/Home/index.js");
 require.alias("home/examples.js", "lego-examples/deps/Home/examples.js");
@@ -3229,4 +3282,77 @@ require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
 require.alias("bredele-clone/index.js", "bredele-clone/index.js");
 require.alias("bredele-store/index.js", "bredele-store/index.js");
 require.alias("todo/index.js", "todo/index.js");
+require.alias("console/index.js", "home/deps/console/index.js");
+require.alias("console/index.js", "home/deps/console/index.js");
+require.alias("bredele-lego/index.js", "console/deps/lego/index.js");
+require.alias("bredele-lego/index.js", "console/deps/lego/index.js");
+require.alias("bredele-artery/index.js", "bredele-lego/deps/artery/index.js");
+require.alias("bredele-artery/lib/app.js", "bredele-lego/deps/artery/lib/app.js");
+require.alias("bredele-artery/index.js", "bredele-lego/deps/artery/index.js");
+require.alias("bredele-store/index.js", "bredele-artery/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-artery/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-emitter/index.js", "bredele-artery/deps/emitter/index.js");
+
+require.alias("bredele-artery/index.js", "bredele-artery/index.js");
+require.alias("bredele-brick/index.js", "bredele-lego/deps/brick/index.js");
+require.alias("bredele-brick/index.js", "bredele-lego/deps/brick/index.js");
+require.alias("bredele-binding/index.js", "bredele-brick/deps/binding/index.js");
+require.alias("bredele-binding/index.js", "bredele-brick/deps/binding/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("bredele-supplant/index.js", "bredele-binding/deps/supplant/index.js");
+require.alias("component-indexof/index.js", "bredele-supplant/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-supplant/deps/trim/index.js");
+
+require.alias("bredele-supplant/index.js", "bredele-supplant/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-binding/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("component-indexof/index.js", "bredele-binding/deps/indexof/index.js");
+
+require.alias("component-trim/index.js", "bredele-binding/deps/trim/index.js");
+
+require.alias("bredele-binding/index.js", "bredele-binding/index.js");
+require.alias("bredele-store/index.js", "bredele-brick/deps/store/index.js");
+require.alias("bredele-store/index.js", "bredele-brick/deps/store/index.js");
+require.alias("component-emitter/index.js", "bredele-store/deps/emitter/index.js");
+
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-store/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-store/deps/clone/index.js");
+require.alias("bredele-clone/index.js", "bredele-clone/index.js");
+require.alias("bredele-store/index.js", "bredele-store/index.js");
+require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-brick/deps/each/index.js");
+require.alias("bredele-each/index.js", "bredele-each/index.js");
+require.alias("bredele-brick/index.js", "bredele-brick/index.js");
+require.alias("bredele-lego/index.js", "bredele-lego/index.js");
+require.alias("bredele-input-brick/index.js", "console/deps/input-brick/index.js");
+require.alias("bredele-input-brick/index.js", "console/deps/input-brick/index.js");
+require.alias("bredele-event/index.js", "bredele-input-brick/deps/event/index.js");
+require.alias("bredele-event/index.js", "bredele-input-brick/deps/event/index.js");
+require.alias("component-indexof/index.js", "bredele-event/deps/indexof/index.js");
+
+require.alias("bredele-event/index.js", "bredele-event/index.js");
+require.alias("bredele-input-brick/index.js", "bredele-input-brick/index.js");
+require.alias("console/index.js", "console/index.js");
 require.alias("home/index.js", "home/index.js");

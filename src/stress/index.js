@@ -7,12 +7,11 @@ var html = require('./stress.html');
 //create view
 
 var view = lego(html, {
-	color: 'red',
-	label: 'Hello World'
+	color: 'red'
 });
 
 var anchor = view.el.querySelector('.brick');
-for(var l = 500; l--;) {
+for(var l = 1000; l--;) {
 	anchor.insertAdjacentHTML('beforeend', '<span>{{ label }}</span>');
 }
 

@@ -1,0 +1,15 @@
+{
+  "name": "console",
+  "description": "console",
+  "dependencies": {
+    "bredele/lego" : "*",
+    "bredele/input-brick" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["console.html"],
+  "styles" : ["console.css"],
+  "scripts": [
+    "index.js"
+  ]
+}

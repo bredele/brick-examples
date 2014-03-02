@@ -15,7 +15,8 @@
     "stress",
     "computed",
     "expressions",
-    "todo"
+    "todo",
+    "console"
   ],
   "main": "index.js",
   "styles" : ["home.css"],
