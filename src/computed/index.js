@@ -1,14 +1,14 @@
 //dependencies
 
-var lego = require('lego');
+var brick = require('brick');
 var html = require('./computed.html');
 
-var app = lego.box();
+var app = brick.box();
 
 //create view
 
-var view = lego(html, {
-	repo: 'lego',
+var view = brick(html, {
+	repo: 'brick',
 	github: 'bredele',
 	firstName: '',
 	lastName: ''

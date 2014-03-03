@@ -8,7 +8,7 @@ module.exports = {
 		name: 'hello',
 		label: 'Hello World!',
 		keywords: 'basic,hello,substitution',
-		author: 'lego',
+		author: 'brick',
 		link: 'https://github.com/bredele/lego-examples/tree/master/src/hello',
 		description:require('hello').description
 	},
@@ -16,7 +16,7 @@ module.exports = {
 		name: 'stress',
 		label: 'Stress test',
 		keywords: 'basic,hello,substitution,stress,hello',
-		author: 'lego',
+		author: 'brick',
 		link: 'https://github.com/bredele/lego-examples/tree/master/src/stress',
 		description:require('stress').description
 	}, 
@@ -24,7 +24,7 @@ module.exports = {
 		name: 'computed',
 		label: 'Computed properties',
 		keywords: 'computed,properties,substitution',
-		author: 'lego',
+		author: 'brick',
 		link: 'https://github.com/bredele/lego-examples/tree/master/src/computed',
 		description:require('computed').description
 	}, 
@@ -32,7 +32,7 @@ module.exports = {
 		name: 'expressions',
 		label: 'Expressions',
 		keywords: 'expressions.substitution,bracket',
-		author: 'lego',
+		author: 'brick',
 		link: 'https://github.com/bredele/lego-examples/tree/master/src/expressions'	,
 		description: require('expressions').description
 	}, 
@@ -40,8 +40,8 @@ module.exports = {
 		name: 'todo',
 		label: 'Todo MVC',
 		keywords:'todo,mvc',
-		author: 'lego',
-		link: 'https://github.com/bredele/lego-examples/tree/master/src/todos'	,
+		author: 'brick',
+		link: 'https://github.com/bredele/lego-examples/tree/master/src/todo'	,
 		description: require('todo').description
 	}
 };

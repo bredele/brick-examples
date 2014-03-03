@@ -2,12 +2,12 @@
 //dependencies
 
 var examples = require('./examples'),
-		lego = require('lego'),
+		brick = require('brick'),
 		Stack = require('domstack'),
 		events= require('events-brick'),
 		Search = require('search');
 
-var app = lego.box();
+var app = brick.box();
 
 //initialize search field
 
@@ -17,9 +17,9 @@ var search = new Search();
 //create view
 //NOTE: next release support query selection
 
-var sidebar = lego(document.querySelector('.sidebar'), examples);
-var container = lego(document.querySelector('.main')).build();
-//LEGO should have convenient handler to avoid that
+var sidebar = brick(document.querySelector('.sidebar'), examples);
+var container = brick(document.querySelector('.main')).build();
+//brick should have convenient handler to avoid that
 var description = container.el.querySelector('.description');
 
 //create console stack
@@ -43,7 +43,7 @@ for(var name in examples) {
 
 //create carret
 
-var caret = lego('<div class="indicator"><span></span></div>');
+var caret = brick('<div class="indicator"><span></span></div>');
 
 //add bricks
 //NOTE: repeat should take view by default

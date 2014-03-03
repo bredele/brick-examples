@@ -2,7 +2,7 @@
   "name": "console",
   "description": "console",
   "dependencies": {
-    "bredele/lego" : "*",
+    "bredele/brick" : "*",
     "bredele/events-brick" : "*",
     "bredele/repeat-brick" : "*",
     "component/trim" : "*"

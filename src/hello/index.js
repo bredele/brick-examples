@@ -1,13 +1,13 @@
 //dependencies
 
-var lego = require('lego');
+var brick = require('brick');
 var html = require('./hello.html');
 
-var app = lego.box();
+var app = brick.box();
 
 //create view
 
-var view = lego(html, {
+var view = brick(html, {
 	color: 'red',
 	label: 'Hello World!'
 });

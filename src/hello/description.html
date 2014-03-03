@@ -1,5 +1,5 @@
-<p>Let's start with the famous hello world! <a href="http://github.com/bredele/lego">Lego</a> allows you to substitute variables into a template string or a dom element as following:</p>
-<pre><code class="lang-html">&lt;div class="lego"&gt;
+<p>Let's start with the famous hello world! <a href="http://github.com/bredele/brick">brick</a> allows you to substitute variables into a template string or a dom element as following:</p>
+<pre><code class="lang-html">&lt;div class="brick"&gt;
     &lt;style&gt;
       .brick {
           color: {{ color }};
@@ -9,7 +9,7 @@
 &lt;/div&gt;
 </code></pre>
 <p>Nothing more simple! </p>
-<pre><code class="lang-js">var view = lego(tmpl).build();
+<pre><code class="lang-js">var view = brick(tmpl).build();
 view.set('label', 'Hello');
 </code></pre>
 <blockquote>

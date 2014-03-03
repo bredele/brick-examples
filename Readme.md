@@ -1,7 +1,7 @@
 
-# Lego examples
+# Brick examples
 
-  > bundle of useful examples for lego
+  > bundle of useful examples for Brick
 
 ## Installation
 

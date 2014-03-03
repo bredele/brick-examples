@@ -1,16 +1,16 @@
 //dependencies
 
-var lego = require('lego'),
+var brick = require('brick'),
 		trim = require('trim');
 
 var html = require('./console.html');
 
 //global to test
-var shell = lego.box();
+var shell = brick.box();
 
 //create view
 
-var view = lego(html, []);
+var view = brick(html, []);
 view.add('logs', require('repeat-brick')(view));
 view.add('ev', require('events-brick')({
 	send: function(target) {

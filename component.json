@@ -1,7 +1,7 @@
 {
-  "name": "lego-examples",
-  "repo": "bredele/lego-examples",
-  "description": "Lego examples",
+  "name": "brick-examples",
+  "repo": "bredele/brick-examples",
+  "description": "brick examples",
   "version": "0.0.1",
   "paths": [
     "src"

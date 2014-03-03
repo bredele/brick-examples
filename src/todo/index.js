@@ -1,15 +1,15 @@
 //dependencies
 
-var lego = require('lego'),
+var brick = require('brick'),
     html = require('./todo.html'),
     list = require('repeat-brick'),
     Store = require('store');
 
-var app = lego.box();
+var app = brick.box();
 
 //init
 
-var view = lego(html, {
+var view = brick(html, {
 	items: 0,
 	pending: 0
 });

@@ -2,7 +2,7 @@
   "name": "computed",
   "description": "computed",
   "dependencies": {
-    "bredele/lego" : "*",
+    "bredele/brick" : "*",
     "bredele/input-brick" : "*"
   },
   "development": {},

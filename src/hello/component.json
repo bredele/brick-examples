@@ -2,7 +2,7 @@
   "name": "hello",
   "description": "hello world",
   "dependencies": {
-    "bredele/lego" : "*",
+    "bredele/brick" : "*",
     "bredele/input-brick" : "*"
   },
   "development": {},

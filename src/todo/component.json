@@ -2,7 +2,7 @@
   "name": "todo",
   "description": "todo mvc",
   "dependencies": {
-    "bredele/lego" : "*",
+    "bredele/brick" : "*",
     "bredele/repeat-brick" : "*",
     "bredele/events-brick" : "*",
     "bredele/hidden-brick" : "*",

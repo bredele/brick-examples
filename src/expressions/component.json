@@ -2,7 +2,7 @@
   "name": "expressions",
   "description": "expressions",
   "dependencies": {
-    "bredele/lego" : "*"
+    "bredele/brick" : "*"
   },
   "development": {},
   "main": "index.js",

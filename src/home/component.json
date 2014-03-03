@@ -2,7 +2,7 @@
   "name": "Home",
   "description": "home package",
   "dependencies": {
-    "bredele/lego" : "*",
+    "bredele/brick" : "*",
     "bredele/repeat-brick" : "*",
     "bredele/domstack" : "*",
     "bredele/control-brick" : "*",
