@@ -1,4 +1,3 @@
-
 # Lego examples
 
   > bundle of useful examples for lego
@@ -29,6 +28,9 @@
 
 [link](https://github.com/bredele/lego-examples/blob/master/src/todo/index.js)
 
+## Notes
+
+The showcase hasn't been tested in IE8. However, [brick](http://github,com/bredele/brick) supports IE8...11.
 
 ## License
 
