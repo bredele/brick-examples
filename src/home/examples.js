@@ -35,6 +35,14 @@ module.exports = {
 		author: 'brick',
 		link: 'https://github.com/bredele/lego-examples/tree/master/src/expressions'	,
 		description: require('expressions').description
+	},
+	filters: {
+		name: 'filters',
+		label: 'Filters',
+		keywords: 'filters,expressions.substitution,bracket',
+		author: 'brick',
+		link: 'https://github.com/bredele/lego-examples/tree/master/src/filters'	,
+		description: require('filters').description
 	}, 
 	todo: {
 		name: 'todo',
@@ -43,5 +51,13 @@ module.exports = {
 		author: 'brick',
 		link: 'https://github.com/bredele/lego-examples/tree/master/src/todo'	,
 		description: require('todo').description
+	}, 
+	svg: {
+		name: 'svg',
+		label: 'svg',
+		keywords:'hello,svg,vectoriel',
+		author: 'brick',
+		link: 'https://github.com/bredele/lego-examples/tree/master/src/svg'	,
+		description: require('svg').description
 	}
 };

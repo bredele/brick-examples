@@ -1,0 +1,14 @@
+{
+  "name": "filters",
+  "description": "filters world",
+  "dependencies": {
+    "bredele/brick" : "*",
+    "bredele/input-brick" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["filters.html", "description.html"],
+  "scripts": [
+    "index.js"
+  ]
+}

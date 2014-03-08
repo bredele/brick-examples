@@ -15,7 +15,9 @@
     "stress",
     "computed",
     "expressions",
+    "filters",
     "todo",
+    "svg",
     "console"
   ],
   "main": "index.js",

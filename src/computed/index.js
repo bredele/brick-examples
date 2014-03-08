@@ -10,8 +10,8 @@ var app = brick.box();
 var view = brick(html, {
 	repo: 'brick',
 	github: 'bredele',
-	firstName: '',
-	lastName: ''
+	firstName: 'foo',
+	lastName: 'bar'
 });
 
 

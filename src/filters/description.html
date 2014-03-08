@@ -1,0 +1,10 @@
+<p><a href="http://github.com/bredele/brick">Brick</a> allows you to apply filter(s) on your expressions:</p>
+<pre><code class="lang-html">&lt;span &gt;{{ label } | uppercase | hello}&lt;/span&gt;
+</code></pre>
+<p>just by doing: </p>
+<pre><code class="lang-js">view.filter('hello', function(str) {
+ return 'hello ' + str + '!';
+});
+</code></pre>
+<p>Filters and expressions are a convenient way to format your data. However, we advise you to keep your templates as clean as possible and to filter/compute/format your data programmaticaly : brick inherits from <a href="http://github.com/bredele/store">Store</a> which allows you to do all of that in JavaScript.</p>
+

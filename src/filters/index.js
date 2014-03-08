@@ -1,22 +1,25 @@
 //dependencies
 
 var brick = require('brick');
-var html = require('./hello.html');
+var html = require('./filters.html');
 
 var app = brick.box();
 
 //create view
 
 var view = brick(html, {
-	color: 'red',
-	label: 'Hello!'
 });
 
 
 //add model brick
 
 view.add('model', require('input-brick'));
-
+view.filter('hello', function(str) {
+	return 'hello ' + str + '!';
+});
+view.filter('uppercase', function(str) {
+	return str.toUpperCase();
+});
 //insert view into body
 
 view.build();

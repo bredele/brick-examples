@@ -1,0 +1,14 @@
+{
+  "name": "svg",
+  "description": "svg",
+  "dependencies": {
+    "bredele/brick" : "*",
+    "bredele/input-brick" : "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "templates" : ["svg.html", "description.html"],
+  "scripts": [
+    "index.js"
+  ]
+}
